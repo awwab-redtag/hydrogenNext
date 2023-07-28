@@ -5,6 +5,9 @@ const nextConfig = {
         storeDomain: 'rtdevplus',
         storefrontApiVersion: '2023-07',
         boostSid: '5495b480-2dee-4bba-9a50-f4f14d3451cc'
+    },
+    images:{
+        domains: ['cdn.shopify.com']
     }
 }
 

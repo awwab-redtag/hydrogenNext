@@ -1,8 +1,10 @@
+import CollectionsPage from '@/app/components/collectionsPage.js';
 import {ServerSideStroreFront} from '../../shopify-server.js';
 
-async function getData(context) {
-    const { slug } = context.params
-    console.log(slug)
+async function getData({context}) {
+    const { slug, locale } = context.params
+    const lang = locale=='ar' ? 'ar':'en'
+
     const body = JSON.stringify({
         query: GRAPHQL_QUERY,
         variables:{
@@ -11,10 +13,9 @@ async function getData(context) {
     })
 
     const gid = await ServerSideStroreFront({body})
-
     const id = gid.data.collectionByHandle.id.split('/').pop()
 
-    const data = await fetch('https://services.mybcapps.com/bc-sf-filter/filter?shop='+process.env.storeDomain+'.myshopify.com&page=1&limit=32&collection_scope='+id+'&product_available=true&variant_available=true&build_filter_tree=true&check_cache=true&locale=en&sid='+process.env.boostSid)
+    const data = await fetch('https://services.mybcapps.com/bc-sf-filter/filter?shop='+process.env.storeDomain+'.myshopify.com&page=1&limit=32&collection_scope='+id+'&product_available=true&variant_available=true&build_filter_tree=true&check_cache=true&locale='+lang+'&sid='+process.env.boostSid)
 
     // Recommendation: handle errors
     if (!data.ok) {
@@ -26,10 +27,9 @@ async function getData(context) {
 }
    
 export default async function Collections(context){
-    const data = await getData(context);
-    // console.log(data)
+    const content = await getData({context});
     return(
-        'Collections'
+        <CollectionsPage content={content}/>
     )
 }
 
