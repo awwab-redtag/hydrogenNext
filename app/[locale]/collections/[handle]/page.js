@@ -1,14 +1,14 @@
-import CollectionsPage from '@/app/components/collectionsPage.js';
+import CollectionsPage from '@/app/[locale]/components/collectionsPage.js';
 import {ServerSideStroreFront} from '../../shopify-server.js';
 
 async function getData({context}) {
-    const { slug, locale } = context.params
+    const { handle, locale } = context.params
     const lang = locale=='ar' ? 'ar':'en'
 
     const body = JSON.stringify({
-        query: GRAPHQL_QUERY,
+        query: COLLECTION_GRAPHQL_QUERY,
         variables:{
-            "handle":slug
+            "handle":handle
         }
     })
 
@@ -34,7 +34,7 @@ export default async function Collections(context){
 }
 
 // A Storefront API query, defined in a separate file where you make queries.
-const GRAPHQL_QUERY = `#graphql
+export const COLLECTION_GRAPHQL_QUERY = `#graphql
     query ($handle: String!) {
         collectionByHandle(handle: $handle) {
             id
